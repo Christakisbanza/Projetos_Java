@@ -1,5 +1,6 @@
 package org.example.model.entities;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
@@ -36,17 +37,21 @@ public class Reservation {
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
-    public String upDateDates(Date checkIn, Date checkOut){
-        if(checkIn.before(new  Date()) || checkOut.before(new Date())){
-            return "Reservation dates for update must be future dates !";
-        }
-        if(checkOut.before(checkIn)){
-            return "Check-Out date must be after check-in date !";
-        }
+    public void upDateDates(Date checkIn, Date checkOut){
         this.checkIn = checkIn;
         this.checkOut = checkOut;
-        return null;
+        error();
     }
+
+    public void error(){
+        if(checkIn.before(new  Date()) || checkOut.before(new Date())){
+            throw new IllegalArgumentException("Reservation dates for update must be future dates !");
+        }
+        if(checkOut.before(checkIn)){
+            throw new IllegalArgumentException("Check-Out date must be after check-in date !");
+        }
+    }
+
 
     public Integer getRoomNumber() {
         return roomNumber;

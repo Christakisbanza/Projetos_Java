@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class ReservationRun {
 
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -20,18 +20,15 @@ public class ReservationRun {
         System.out.print("Room number: ");
         int num = scanner.nextInt();
 
-        try{
+        try {
             System.out.println("Check-in date (dd/MM/yyyy):");
             checkIn = simpleDateFormat.parse(scanner.next());
             System.out.println("Check-Out date (dd/MM/yyyy):");
             checkOut = simpleDateFormat.parse(scanner.next());
-        }catch (ParseException e){
-            System.out.println("Data não encontrada !");
-        }
-        if(checkOut.before(checkIn)){
-            System.out.println("Error in reservation: Check-out date must be after check-in date !");
-        }else {
+
             Reservation reservation = new Reservation(num, checkIn, checkOut);
+            reservation.error();
+
             System.out.println("Reservation: " + reservation);
 
             System.out.println();
@@ -41,16 +38,13 @@ public class ReservationRun {
             System.out.println("Check-Out date (dd/MM/yyyy):");
             checkOut = simpleDateFormat.parse(scanner.next());
 
-            String error = reservation.upDateDates(checkIn,checkOut);
+            reservation.upDateDates(checkIn, checkOut);
 
-            if (error == null){
-                System.out.println("Reservation: " + reservation);
-            }else {
-                System.out.println("Error: " + error);
-            }
-
+            System.out.println("Reservation: " + reservation);
         }
-
+        catch (ParseException | IllegalArgumentException e){
+            System.out.println("Invalid date: " + e.getMessage());
+        }
 
 
         scanner.close();
